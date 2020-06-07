@@ -10,13 +10,12 @@ class ESenseRepo {
   StreamSubscription subscription;
 
 
-  void listenToConnect({Function(String) callback}) {
-    ESenseManager.connectionEvents.listen((event) {
+  Stream<ConnectionEvent> listenToConnect() async* {
+    print("hiuer");
+    await for (ConnectionEvent event in ESenseManager.connectionEvents) {
       print(event);
-      if(event.type == ConnectionType.connected) {
-        callback(event.toString());
-      }
-    });
+      yield event;
+    }
   }
 
   void listenToData({Function(String) callback}) {

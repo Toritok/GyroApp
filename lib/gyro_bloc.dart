@@ -52,10 +52,11 @@ class EarableBloc extends Bloc<EarableEvent, EarableState> {
   }
 
   Stream<EarableState> _mapLaunchedToState(Opened open) async* {
-
-    _earable.listenToConnect(callback: (String data) {
-       yield Running(0);
-    });
+    await for(ConnectionEvent event in _earable.listenToConnect()) {
+      if(event.type == ConnectionType.connected) {
+        yield Running(0);
+      }
+    }
   }
 
 
