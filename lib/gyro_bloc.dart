@@ -53,37 +53,16 @@ class EarableBloc extends Bloc<EarableEvent, EarableState> {
 
   Stream<EarableState> _mapLaunchedToState(Opened open) async* {
 
-    if (state is Launched) {
-      while(con = false) {
-        await for (var event in _earable.connectToESense()) {
-          print(event);
-          if (event.type == ConnectionType.connected) {
-            yield Ready(0);
-          }
-        }
-      }
-    }
+    _earable.listenToConnect(callback: (String data) {
+       yield Running(0);
+    });
   }
 
 
 
   Stream<EarableState> _mapStartToState(Start start) async* {
     axisSubscription?.cancel();
-    if (state is Ready) {
-      _earable.listenToESenseEvents().listen((event) {
-
-        switch(event.runtimeType) {
-          case ButtonEventChanged:
-            add(event);
-            print("ButtonRead");
-            break;
-
-          case AccelerometerOffsetRead:
-            print("offsetRead");
-            break;
-        }
-      });
-      }
+    yield Running(0);
     }
 
   Stream<EarableState> _mapPauseToState(Stop stop) async* {
