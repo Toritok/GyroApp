@@ -11,21 +11,22 @@ class ESenseRepo {
 
 
   Stream<ConnectionEvent> listenToConnect() async* {
-    print("hiuer");
+    ESenseManager.connect(eSenseName);
     await for (ConnectionEvent event in ESenseManager.connectionEvents) {
       print(event);
       yield event;
     }
   }
 
-  void listenToData({Function(String) callback}) {
-    subscription = ESenseManager.sensorEvents.listen((event) {
-      callback(event.toString());
-    });
+  Stream<SensorEvent> listenToData() async* {
+    ESenseManager.setSamplingRate(50);
+      await for (SensorEvent event in ESenseManager.sensorEvents) {
+        yield event;
+      }
   }
 
   void pauseListenToSensorEvents() async {
-    subscription.cancel();
+    ESenseManager.disconnect();
   }
 
 }

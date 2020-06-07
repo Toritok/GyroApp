@@ -8,14 +8,7 @@ abstract class EarableEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class Start extends EarableEvent {
-  final int value;
-
-  const Start({@required this.value});
-
-  @override
-  String toString() => "Start { axis: $value }";
-}
+class Start extends EarableEvent {}
 
 class Stop extends EarableEvent {}
 

@@ -54,23 +54,22 @@ class EarableBloc extends Bloc<EarableEvent, EarableState> {
   Stream<EarableState> _mapLaunchedToState(Opened open) async* {
     await for(ConnectionEvent event in _earable.listenToConnect()) {
       if(event.type == ConnectionType.connected) {
-        yield Running(0);
+        yield Ready(_value);
       }
     }
   }
 
-
-
   Stream<EarableState> _mapStartToState(Start start) async* {
+    print("hier");
     axisSubscription?.cancel();
-    yield Running(0);
+      yield Running(_value);
     }
 
   Stream<EarableState> _mapPauseToState(Stop stop) async* {
     axisSubscription?.cancel();
     if (state is Running) {
       _earable.pauseListenToSensorEvents();
-        yield Ready(0);
+        yield Ready(_value);
     }
   }
 

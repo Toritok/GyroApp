@@ -105,7 +105,7 @@ class Actions extends StatelessWidget {
         FloatingActionButton(
           child: Icon(Icons.play_arrow),
           onPressed: () =>
-              earableBloc.add(Start(value: currentState.value)),
+              earableBloc.add(Start()),
         ),
       ];
     }
