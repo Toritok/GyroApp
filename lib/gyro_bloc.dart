@@ -10,8 +10,11 @@ import 'package:bloc/bloc.dart';
 
 
 class EarableBloc extends Bloc<EarableEvent, EarableState> {
-  final int _value = 0;
+  int _value = 0;
+  int axis;
+  int _straight;
   final ESenseRepo _earable;
+
 
 
   StreamSubscription<int> axisSubscription;
@@ -41,6 +44,12 @@ class EarableBloc extends Bloc<EarableEvent, EarableState> {
       yield* _mapResetToState(event);
     }else if(event is Opened) {
       yield* _mapLaunchedToState(event);
+    }else if(event is Connected) {
+      yield* _mapConnectionToState(event);
+    }else if(event is AxisUpdate) {
+      yield* _mapAxisUpdateToState(event);
+    }else if(event is ButtonUpdate) {
+
     }
   }
 
@@ -51,30 +60,49 @@ class EarableBloc extends Bloc<EarableEvent, EarableState> {
     return super.close();
   }
 
+  Stream<EarableState> _mapConnectionToState(Connected connect) async* {
+    axisSubscription?.cancel();
+    yield Ready(_value);
+  }
+  Stream<EarableState> _mapAxisUpdateToState(AxisUpdate update) async* {
+    axisSubscription?.cancel();
+    yield Running(_value);
+  }
+
   Stream<EarableState> _mapLaunchedToState(Opened open) async* {
-    await for(ConnectionEvent event in _earable.listenToConnect()) {
-      if(event.type == ConnectionType.connected) {
-        yield Ready(_value);
-      }
-    }
+    _earable.listenToConnect(callback: (ConnectionEvent event) {
+         if(event.type == ConnectionType.connected) {
+         this.add(Connected());
+         }
+    });
   }
 
   Stream<EarableState> _mapStartToState(Start start) async* {
-    print("hier");
-    axisSubscription?.cancel();
-      yield Running(_value);
-    }
+    _earable.listenToData(callback: (SensorEvent event) {
+      if(_straight == null) {
+        _straight = event.accel[0];
+      }
+        _value = event.accel[0];
+        add(AxisUpdate());
+    });
+  }
 
   Stream<EarableState> _mapPauseToState(Stop stop) async* {
     axisSubscription?.cancel();
     if (state is Running) {
-      _earable.pauseListenToSensorEvents();
-        yield Ready(_value);
+      _earable.dispose();
+      _value = 0;
+        yield Launched(0);
     }
   }
 
   Stream<EarableState> _mapResetToState(Reset reset) async* {
     axisSubscription?.cancel();
     yield Running(_value);
+  }
+
+
+  int _calcAxis() {
+    return 5;
   }
 }

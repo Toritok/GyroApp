@@ -7,26 +7,34 @@ final String eSenseName = 'eSense-0091';
 
 class ESenseRepo {
   int currentAxis = 0;
-  StreamSubscription subscription;
+  StreamSubscription connectionSubscription;
+  StreamSubscription eventSubscription;
 
-
-  Stream<ConnectionEvent> listenToConnect() async* {
+  void listenToConnect({Function(ConnectionEvent) callback}) {
+    ESenseManager.setSamplingRate(5);
     ESenseManager.connect(eSenseName);
-    await for (ConnectionEvent event in ESenseManager.connectionEvents) {
+    connectionSubscription = ESenseManager.connectionEvents.listen((event) {
       print(event);
-      yield event;
-    }
+      callback(event);
+    });
   }
 
-  Stream<SensorEvent> listenToData() async* {
-    ESenseManager.setSamplingRate(50);
-      await for (SensorEvent event in ESenseManager.sensorEvents) {
-        yield event;
-      }
+  void listenToData({Function(SensorEvent) callback}) {
+
+    eventSubscription = ESenseManager.sensorEvents.listen((event) {
+      print(event);
+      callback(event);
+    });
+
   }
 
-  void pauseListenToSensorEvents() async {
+
+  void dispose() {
+    connectionSubscription.cancel();
+    eventSubscription.cancel();
     ESenseManager.disconnect();
   }
+
+
 
 }

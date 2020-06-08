@@ -16,3 +16,9 @@ class Opened extends EarableEvent {}
 
 class Reset extends EarableEvent {}
 
+class Connected extends EarableEvent {}
+
+class AxisUpdate extends EarableEvent {}
+
+class ButtonUpdate extends EarableEvent {}
+
