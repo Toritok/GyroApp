@@ -28,6 +28,7 @@ dependencies:
   equatable: ^1.0.0
   wave: ^0.0.8
   esense_flutter: ^0.2.1
+  sleek_circular_slider: ^1.1.0
 
 
   # The following adds the Cupertino Icons font to your application.

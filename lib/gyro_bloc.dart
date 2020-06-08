@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:esense_flutter/esense.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gyroapp/gyro_event.dart';
@@ -11,8 +12,7 @@ import 'package:bloc/bloc.dart';
 
 class EarableBloc extends Bloc<EarableEvent, EarableState> {
   int _value = 0;
-  int axis;
-  int _straight;
+  int _normedAngle;
   final ESenseRepo _earable;
 
 
@@ -79,10 +79,7 @@ class EarableBloc extends Bloc<EarableEvent, EarableState> {
 
   Stream<EarableState> _mapStartToState(Start start) async* {
     _earable.listenToData(callback: (SensorEvent event) {
-      if(_straight == null) {
-        _straight = event.accel[0];
-      }
-        _value = event.accel[0];
+        _calcAxis(event.accel[0], event.accel[1], event.accel[2]);
         add(AxisUpdate());
     });
   }
@@ -98,11 +95,27 @@ class EarableBloc extends Bloc<EarableEvent, EarableState> {
 
   Stream<EarableState> _mapResetToState(Reset reset) async* {
     axisSubscription?.cancel();
+    _normedAngle = null;
     yield Running(_value);
   }
 
 
-  int _calcAxis() {
-    return 5;
+  void _calcAxis(XAchsis,YAchsis,ZAchsis) {
+    double norm_Of_g = sqrt(XAchsis * XAchsis + YAchsis * YAchsis + ZAchsis * ZAchsis);
+    double y = YAchsis/norm_Of_g;
+    int result = (atan(y) * (180/pi)).toInt();
+    if(_normedAngle == null) {
+      _normedAngle = result;
+    }
+    int normed = (_normedAngle - result);
+
+    if(normed < -25) {
+      _value = -25;
+    }else if(normed > 25) {
+      _value = 25;
+    }else{
+      _value = normed;
+    }
   }
+
 }

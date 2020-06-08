@@ -14,7 +14,7 @@ class ESenseRepo {
     ESenseManager.setSamplingRate(5);
     ESenseManager.connect(eSenseName);
     connectionSubscription = ESenseManager.connectionEvents.listen((event) {
-      print(event);
+    // print(event);
       callback(event);
     });
   }
@@ -22,7 +22,7 @@ class ESenseRepo {
   void listenToData({Function(SensorEvent) callback}) {
 
     eventSubscription = ESenseManager.sensorEvents.listen((event) {
-      print(event);
+    //  print(event);
       callback(event);
     });
 
