@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:math';
 import 'package:esense_flutter/esense.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:gyroapp/gyro_event.dart';
-import 'package:gyroapp/gyro_repo.dart';
-import 'package:gyroapp/gyro_state.dart';
 import 'package:bloc/bloc.dart';
+import '../data/gyro_repo.dart';
+import 'gyro_event.dart';
+import 'gyro_state.dart';
 
 
 
