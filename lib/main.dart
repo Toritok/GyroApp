@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gyroapp/ui/screen_UI.dart';
+import 'package:gyroapp/ui/main_screen.dart';
 import 'data/gyro_repo.dart';
 import 'bloc/gyro_bloc.dart';
 

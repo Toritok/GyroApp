@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gyroapp/bloc/gyro_bloc.dart';
 import 'package:gyroapp/bloc/gyro_state.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
-import 'background_UI.dart';
-import 'buttons_UI.dart';
+import 'background_screen.dart';
+import 'buttons.dart';
 
 
 
@@ -27,12 +27,13 @@ class AxisUI extends StatelessWidget {
       body: Stack(
         children: [
           Background(),
+
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 100.0),
+                padding: EdgeInsets.symmetric(vertical: 100),
                 child: Center(
                   child: BlocBuilder<EarableBloc, EarableState>(
                     builder: (context, state) {
@@ -59,9 +60,11 @@ class AxisUI extends StatelessWidget {
                 ),
               ),
               BlocBuilder<EarableBloc, EarableState>(
+
                 condition: (previousState, state) =>
                 state.runtimeType != previousState.runtimeType,
                 builder: (context, state) => ActionButtons(),
+
               ),
             ],
           ),

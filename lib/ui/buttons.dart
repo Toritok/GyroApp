@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gyroapp/bloc/gyro_bloc.dart';
 import 'package:gyroapp/bloc/gyro_state.dart';
-import '../data/gyro_repo.dart';
 import 'package:gyroapp/bloc/gyro_event.dart';
 
 

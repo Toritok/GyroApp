@@ -10,16 +10,15 @@ class ESenseRepo {
   StreamSubscription eventSubscription;
 
   void listenToConnect({Function(ConnectionEvent) callback}) {
-    ESenseManager.setSamplingRate(5);
-    ESenseManager.connect(eSenseName);
-    connectionSubscription = ESenseManager.connectionEvents.listen((event) {
-    // print(event);
-      callback(event);
+        ESenseManager.setSamplingRate(5);
+        ESenseManager.connect(eSenseName);
+        connectionSubscription = ESenseManager.connectionEvents.listen((event) {
+          // print(event);
+          callback(event);
     });
   }
 
   void listenToData({Function(SensorEvent) callback}) {
-
     eventSubscription = ESenseManager.sensorEvents.listen((event) {
     //  print(event);
       callback(event);
